@@ -96,11 +96,17 @@
     <form onsubmit="sendToWhatsApp(); return false;">
       <input type="text" id="name" placeholder="Customer Name" required>
       <input type="text" id="aadhar" placeholder="Aadhar Number" required>
-      <small>📍 Open Google Maps, search your location, tap Share → Copy link, then paste below 👇</small>
-      <input type="text" id="location" placeholder="Your Google Maps Location Link" required>
       <input type="text" id="mobile" placeholder="Mobile Number" required>
+      <input type="number" id="adults" placeholder="Number of Adults (Max 4)" min="1" max="4" required>
+      <input type="number" id="children" placeholder="Children Below 10 (Max 3)" min="0" max="3">
 
-      <button type="submit">Send to WhatsApp</button>
+      <small><mark>Punjabi Language</mark><br><br>📍 ਗੂਗਲ ਮੈਪਸ ਖੋਲ੍ਹੋ, ਖੋਜੋ ਅਤੇ ਆਪਣਾ ਸਥਾਨ ਚੁਣੋ। ਇਸਨੂੰ ਚੁਣਨ ਤੋਂ ਬਾਅਦ, "Share" ਬਟਨ 'ਤੇ Click ਕਰੋ, ਫਿਰ "Copy to clipboard ਵਿੱਚ ਕਾਪੀ ਕਰੋ" ਅਤੇ ਹੇਠਾਂ ਦਿੱਤੇ ਬਾਕਸ ਵਿੱਚ ਲਿੰਕ ਪੇਸਟ ਕਰੋ।👇<br><br><mark>Hindi Language</mark><br><br>📍 Google Maps खोलें, सर्च करें और अपना स्थान चुनें। इसे चुनने के बाद, "Share" बटन पर क्लिक करें, फिर "क्लिपबोर्ड पर कॉपी करें" और नीचे दिए गए बॉक्स में लिंक पेस्ट करें।👇<br><br><mark>English Language</mark> <br><br>📍 Open Google Maps, search and select your location.
+After selecting it, tap the "Share" button, then tap "Copy to clipboard", and paste the link in the box below.👇</small>
+
+      <input type="text" id="location" placeholder="Your Google Maps Location Link" required>
+
+      <button type="submit">Send your Details</button>
+      <button type="button" onclick="alert('Send the details first, and later we will tell you the cab charges. If you find the rates reasonable, then only we will proceed with the booking.')">Note</button>
     </form>
   </div>
 
@@ -114,9 +120,20 @@
       const aadhar = document.getElementById("aadhar").value;
       const location = document.getElementById("location").value;
       const mobile = document.getElementById("mobile").value;
+      const adults = parseInt(document.getElementById("adults").value);
+      const children = parseInt(document.getElementById("children").value) || 0;
 
-      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Location: ${location}\n📞 Mobile: ${mobile}`;
+      if (adults > 4) {
+        alert("Only 4 adults allowed.");
+        return;
+      }
 
+      if (children > 3) {
+        alert("Only 3 children under 10 allowed.");
+        return;
+      }
+
+      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📞 Mobile: ${mobile}\n👥 Adults: ${adults}\n👶 Children (under 10): ${children}\n📍 Location: ${location}`;
       const waUrl = `https://wa.me/919041286835?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, "_blank");
     }
