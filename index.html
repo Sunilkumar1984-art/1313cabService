@@ -2,132 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sahej Booking App</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1313Cab Service - Book a Ride</title>
   <style>
-    body { font-family: sans-serif; background: #f0f8ff; padding: 20px; }
-    .box { max-width: 650px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; margin-bottom: 20px; }
-    .row { display: flex; gap: 10px; margin-bottom: 15px; }
-    .field { flex: 1; }
-    label { font-weight: bold; }
-    input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    .result { display: block; background: #e7ffe7; padding: 15px; border-radius: 5px; margin: 15px 0; font-weight: bold; color: green; text-align: center; }
-    button { width: 100%; padding: 12px; background: #28a745; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #218838; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      text-align: center;
+    }
+    img {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+    h2 {
+      color: #333;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 12px;
+      width: 100%;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #1ebe5d;
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>🚖 Sahej Ride Booking</h2>
 
-    <div class="row">
-      <div class="field">
-        <label>📍 From</label>
-        <select id="start" onchange="calculateFare()">
-          <option value="">Select</option>
-          <option>Sector 17</option>
-          <option>Sector 22</option>
-          <option>Mohali Phase 5</option>
-          <option>Fatehgarh Sahib</option>
-          <option>Patiala Bus Stand</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>📍 To</label>
-        <select id="end" onchange="calculateFare()">
-          <option value="">Select</option>
-          <option>Sector 17</option>
-          <option>Sector 22</option>
-          <option>Mohali Phase 5</option>
-          <option>Fatehgarh Sahib</option>
-          <option>Patiala Bus Stand</option>
-        </select>
-      </div>
-    </div>
+  <img src="https://i.imgur.com/Vf4f6sG.png" alt="1313Cab Logo"> <!-- Replace with your own logo URL -->
+  <h2>1313Cab Service - Ride Booking</h2>
 
-    <div class="row">
-      <div class="field">
-        <label>👤 Customer Name</label>
-        <input type="text" id="custName">
-      </div>
-      <div class="field">
-        <label>📞 Mobile No.</label>
-        <input type="text" id="custPhone">
-      </div>
-    </div>
-
-    <div class="field">
-      <label>🕒 Pickup Time</label>
-      <input type="time" id="pickupTime">
-    </div>
-
-    <div class="result" id="fareBox">Fare will appear here...</div>
-
-    <button onclick="sendBooking()">📤 Book Now via WhatsApp</button>
-  </div>
+  <form onsubmit="sendToWhatsApp(); return false;">
+    <input type="text" id="name" placeholder="Customer Name" required>
+    <input type="text" id="aadhar" placeholder="Aadhar Number" required>
+    <input type="text" id="pickup" placeholder="Pickup Location" required>
+    <input type="text" id="drop" placeholder="Drop Location" required>
+    <input type="text" id="mobile" placeholder="Customer Mobile Number" required>
+    <button type="submit">Send on WhatsApp</button>
+  </form>
 
   <script>
-    let rate = 15; // hidden backend rate
-    const distances = {
-      "Sector 17->Sector 22": 4,
-      "Sector 17->Mohali Phase 5": 9,
-      "Sector 22->Fatehgarh Sahib": 35,
-      "Mohali Phase 5->Patiala Bus Stand": 40,
-      "Fatehgarh Sahib->Patiala Bus Stand": 30,
-      "Sector 22->Sector 17": 4,
-      "Mohali Phase 5->Sector 17": 9,
-      "Fatehgarh Sahib->Sector 22": 35,
-      "Patiala Bus Stand->Mohali Phase 5": 40,
-      "Patiala Bus Stand->Fatehgarh Sahib": 30
-    };
+    function sendToWhatsApp() {
+      const name = document.getElementById("name").value;
+      const aadhar = document.getElementById("aadhar").value;
+      const pickup = document.getElementById("pickup").value;
+      const drop = document.getElementById("drop").value;
+      const mobile = document.getElementById("mobile").value;
 
-    function calculateFare() {
-      const start = document.getElementById("start").value;
-      const end = document.getElementById("end").value;
-      const fareBox = document.getElementById("fareBox");
+      const message = `*New Ride Booking Request* 👋
+📛 Name: ${name}
+🆔 Aadhar: ${aadhar}
+📍 Pickup: ${pickup}
+📍 Drop: ${drop}
+📞 Customer Mobile: ${mobile}`;
 
-      if (!start || !end || start === end) {
-        fareBox.innerHTML = "⚠️ Please select valid locations.";
-        return;
-      }
-
-      const key = `${start}->${end}`;
-      const reverseKey = `${end}->${start}`;
-      const km = distances[key] || distances[reverseKey];
-
-      if (!km) {
-        fareBox.innerHTML = "❌ Distance not available.";
-        return;
-      }
-
-      const fare = km * rate;
-      fareBox.innerHTML = `🚗 Distance: ${km} km | 💰 Fare: ₹${fare.toFixed(2)}`;
-    }
-
-    function sendBooking() {
-      const name = document.getElementById("custName").value;
-      const phone = document.getElementById("custPhone").value;
-      const time = document.getElementById("pickupTime").value;
-      const start = document.getElementById("start").value;
-      const end = document.getElementById("end").value;
-
-      const key = `${start}->${end}`;
-      const reverseKey = `${end}->${start}`;
-      const km = distances[key] || distances[reverseKey];
-      const fare = km * rate;
-
-      if (!name || !phone || !time || !start || !end || !km) {
-        alert("⚠️ Please fill all fields.");
-        return;
-      }
-
-      const msg = `📟 *New Booking Request*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🕒 Time: ${time}\n📍 From: ${start}\n📍 To: ${end}\n🛍️ Distance: ${km} km\n💰 Fare: ₹${fare.toFixed(2)}`;
-
-      const encodedMsg = encodeURIComponent(msg);
-      const whatsappLink = `https://wa.me/919041286835?text=${encodedMsg}`;
-      window.open(whatsappLink, '_blank');
+      const phoneNumber = "919041286835"; // YOUR number with country code
+      const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+      window.open(whatsappURL, "_blank");
     }
   </script>
+
 </body>
 </html>
