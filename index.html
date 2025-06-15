@@ -5,75 +5,73 @@
   <title>1313Cab Service - Book a Ride</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: Arial, sans-serif;
+      background: #f1f1f1;
       margin: 0;
-      background-color: #f4f4f4;
+      padding: 0;
     }
 
     header {
-      background-color: #1313cc;
+      background: #1313cc;
       color: white;
-      padding: 20px;
       text-align: center;
+      padding: 20px;
     }
 
     header img {
       height: 60px;
       vertical-align: middle;
-      margin-right: 15px;
+      margin-right: 10px;
     }
 
     header h1 {
-      display: inline-block;
-      font-size: 26px;
-      margin: 0;
+      display: inline;
+      font-size: 28px;
       vertical-align: middle;
     }
 
     .container {
       max-width: 500px;
       background: white;
-      margin: 40px auto;
-      padding: 25px;
+      margin: 30px auto;
+      padding: 20px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     .container h2 {
-      text-align: center;
-      margin-bottom: 20px;
       color: #1313cc;
+      text-align: center;
     }
 
     input {
       width: 100%;
       padding: 10px;
       margin: 10px 0;
-      border: 1px solid #aaa;
-      border-radius: 5px;
       font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
     }
 
     button {
-      background-color: #25D366;
+      background: #25D366;
       color: white;
-      border: none;
       padding: 12px;
-      width: 100%;
-      border-radius: 5px;
       font-size: 16px;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #1ebe5d;
+      background: #1ebe5d;
     }
 
     .small-btn {
       background-color: #007bff;
-      font-size: 14px;
       margin-top: 5px;
+      font-size: 14px;
     }
 
     .small-btn:hover {
@@ -81,53 +79,68 @@
     }
 
     footer {
-      background-color: #1313cc;
+      background: #1313cc;
       color: white;
       text-align: center;
       padding: 15px;
-      font-size: 14px;
       position: fixed;
-      bottom: 0;
       width: 100%;
+      bottom: 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Guru_Nanak_with_Halo.png/200px-Guru_Nanak_with_Halo.png" alt="Baba Nanak ji">
     <h1>1313Cab Service</h1>
   </header>
 
-  <!-- Booking Form -->
   <div class="container">
     <h2>Book Your Ride</h2>
     <form onsubmit="sendToWhatsApp(); return false;">
       <input type="text" id="name" placeholder="Customer Name" required>
       <input type="text" id="aadhar" placeholder="Aadhar Number" required>
-      
+
       <input type="text" id="pickup" placeholder="Pickup Location" required>
-      <button type="button" class="small-btn" onclick="fillPickupLocation()">📍 Use My Location for Pickup</button>
+      <button type="button" class="small-btn" onclick="fillLocation('pickup')">📍 Use My Location for Pickup</button>
 
       <input type="text" id="drop" placeholder="Drop Location" required>
-      <button type="button" class="small-btn" onclick="fillDropLocation()">📍 Use My Location for Drop</button>
+      <button type="button" class="small-btn" onclick="fillLocation('drop')">📍 Use My Location for Drop</button>
 
-      <input type="text" id="mobile" placeholder="Customer Mobile Number" required>
-      <button type="submit">Send on WhatsApp</button>
+      <input type="text" id="mobile" placeholder="Mobile Number" required>
+
+      <button type="submit">Send to WhatsApp</button>
     </form>
 
     <h3 style="text-align:center; margin-top:30px;">OR 📍</h3>
     <button class="small-btn" onclick="sendOnlyLocation()">📍 Send Only My Current Location</button>
   </div>
 
-  <!-- Footer -->
   <footer>
     © 2025 | 1313Cab Service | Powered by Sunil Kumar
   </footer>
 
-  <!-- Scripts -->
   <script>
+    function fillLocation(fieldId) {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const link = `https://www.google.com/maps?q=${lat},${lon}`;
+            document.getElementById(fieldId).value = link;
+          },
+          function (error) {
+            alert("⚠️ Location access denied. Please allow location.");
+          },
+          { timeout: 10000 }
+        );
+      } else {
+        alert("❌ Geolocation not supported by your browser.");
+      }
+    }
+
     function sendToWhatsApp() {
       const name = document.getElementById("name").value;
       const aadhar = document.getElementById("aadhar").value;
@@ -135,43 +148,26 @@
       const drop = document.getElementById("drop").value;
       const mobile = document.getElementById("mobile").value;
 
-      const message = `*🚖 New Ride Booking Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Pickup: ${pickup}\n📍 Drop: ${drop}\n📞 Mobile: ${mobile}`;
+      const message = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Pickup: ${pickup}\n📍 Drop: ${drop}\n📞 Mobile: ${mobile}`;
       const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, "_blank");
     }
 
-    function fillPickupLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-          document.getElementById("pickup").value = link;
-        }, function() {
-          alert("Unable to fetch pickup location.");
-        });
-      }
-    }
-
-    function fillDropLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-          document.getElementById("drop").value = link;
-        }, function() {
-          alert("Unable to fetch drop location.");
-        });
-      }
-    }
-
     function sendOnlyLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(pos) {
-          const link = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-          const message = `📍 *My Current Location:*\n${link}`;
-          const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
-          window.open(whatsappURL, "_blank");
-        }, function() {
-          alert("Location access denied.");
-        });
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const link = `https://www.google.com/maps?q=${lat},${lon}`;
+            const message = `📍 *My Current Location:*\n${link}`;
+            const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, "_blank");
+          },
+          function () {
+            alert("⚠️ Unable to fetch your location.");
+          }
+        );
       }
     }
   </script>
