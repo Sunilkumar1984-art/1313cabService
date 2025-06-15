@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1313Cab Service - Manual Location</title>
+  <title>1313Cab Service - Book a Ride</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,23 +10,27 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background: #1313cc;
       color: white;
       text-align: center;
       padding: 20px;
     }
+
     header img {
       height: 60px;
       margin-right: 10px;
       vertical-align: middle;
     }
+
     header h1 {
       display: inline-block;
       font-size: 26px;
       margin: 0;
       vertical-align: middle;
     }
+
     .container {
       max-width: 500px;
       background: white;
@@ -35,28 +39,39 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    input, textarea {
+
+    input {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
+      margin-top: 12px;
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 15px;
     }
+
+    small {
+      display: block;
+      margin-top: 5px;
+      color: #666;
+      font-size: 13px;
+    }
+
     button {
       background-color: #25D366;
       color: white;
       padding: 12px;
-      margin-top: 15px;
+      margin-top: 20px;
       font-size: 16px;
       width: 100%;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #1ebe5d;
     }
+
     footer {
       background: #1313cc;
       color: white;
@@ -76,16 +91,14 @@
   </header>
 
   <div class="container">
-    <h2 style="text-align:center; color:#1313cc;">Book a Cab (Manual Location)</h2>
+    <h2 style="text-align:center; color:#1313cc;">Book a Cab</h2>
 
     <form onsubmit="sendToWhatsApp(); return false;">
       <input type="text" id="name" placeholder="Customer Name" required>
       <input type="text" id="aadhar" placeholder="Aadhar Number" required>
-      <input type="text" id="pickup" placeholder="Pickup Location (Google Maps Link)" required>
-      <input type="text" id="drop" placeholder="Drop Location (Google Maps Link)" required>
+      <small>📍 Open Google Maps, search your location, tap Share → Copy link, then paste below 👇</small>
+      <input type="text" id="location" placeholder="Your Google Maps Location Link" required>
       <input type="text" id="mobile" placeholder="Mobile Number" required>
-
-      <small>📍 Open Google Maps, search your location, tap Share → Copy link, then paste above 👆</small>
 
       <button type="submit">Send to WhatsApp</button>
     </form>
@@ -99,11 +112,10 @@
     function sendToWhatsApp() {
       const name = document.getElementById("name").value;
       const aadhar = document.getElementById("aadhar").value;
-      const pickup = document.getElementById("pickup").value;
-      const drop = document.getElementById("drop").value;
+      const location = document.getElementById("location").value;
       const mobile = document.getElementById("mobile").value;
 
-      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Pickup: ${pickup}\n📍 Drop: ${drop}\n📞 Mobile: ${mobile}`;
+      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Location: ${location}\n📞 Mobile: ${mobile}`;
 
       const waUrl = `https://wa.me/919041286835?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, "_blank");
