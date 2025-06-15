@@ -2,34 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1313Cab Service - Book a Ride</title>
+  <title>1313Cab Service - Manual Location</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f1f1f1;
+      background: #f3f3f3;
       margin: 0;
       padding: 0;
     }
-
     header {
       background: #1313cc;
       color: white;
       text-align: center;
       padding: 20px;
     }
-
     header img {
       height: 60px;
-      vertical-align: middle;
       margin-right: 10px;
-    }
-
-    header h1 {
-      display: inline;
-      font-size: 28px;
       vertical-align: middle;
     }
-
+    header h1 {
+      display: inline-block;
+      font-size: 26px;
+      margin: 0;
+      vertical-align: middle;
+    }
     .container {
       max-width: 500px;
       background: white;
@@ -38,46 +35,28 @@
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
-    .container h2 {
-      color: #1313cc;
-      text-align: center;
-    }
-
-    input {
+    input, textarea {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
+      margin-top: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 15px;
     }
-
     button {
-      background: #25D366;
+      background-color: #25D366;
       color: white;
       padding: 12px;
+      margin-top: 15px;
       font-size: 16px;
       width: 100%;
       border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-
     button:hover {
-      background: #1ebe5d;
+      background-color: #1ebe5d;
     }
-
-    .small-btn {
-      background-color: #007bff;
-      margin-top: 5px;
-      font-size: 14px;
-    }
-
-    .small-btn:hover {
-      background-color: #0056b3;
-    }
-
     footer {
       background: #1313cc;
       color: white;
@@ -97,24 +76,19 @@
   </header>
 
   <div class="container">
-    <h2>Book Your Ride</h2>
+    <h2 style="text-align:center; color:#1313cc;">Book a Cab (Manual Location)</h2>
+
     <form onsubmit="sendToWhatsApp(); return false;">
       <input type="text" id="name" placeholder="Customer Name" required>
       <input type="text" id="aadhar" placeholder="Aadhar Number" required>
-
-      <input type="text" id="pickup" placeholder="Pickup Location" required>
-      <button type="button" class="small-btn" onclick="fillLocation('pickup')">📍 Use My Location for Pickup</button>
-
-      <input type="text" id="drop" placeholder="Drop Location" required>
-      <button type="button" class="small-btn" onclick="fillLocation('drop')">📍 Use My Location for Drop</button>
-
+      <input type="text" id="pickup" placeholder="Pickup Location (Google Maps Link)" required>
+      <input type="text" id="drop" placeholder="Drop Location (Google Maps Link)" required>
       <input type="text" id="mobile" placeholder="Mobile Number" required>
+
+      <small>📍 Open Google Maps, search your location, tap Share → Copy link, then paste above 👆</small>
 
       <button type="submit">Send to WhatsApp</button>
     </form>
-
-    <h3 style="text-align:center; margin-top:30px;">OR 📍</h3>
-    <button class="small-btn" onclick="sendOnlyLocation()">📍 Send Only My Current Location</button>
   </div>
 
   <footer>
@@ -122,25 +96,6 @@
   </footer>
 
   <script>
-    function fillLocation(fieldId) {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const link = `https://www.google.com/maps?q=${lat},${lon}`;
-            document.getElementById(fieldId).value = link;
-          },
-          function (error) {
-            alert("⚠️ Location access denied. Please allow location.");
-          },
-          { timeout: 10000 }
-        );
-      } else {
-        alert("❌ Geolocation not supported by your browser.");
-      }
-    }
-
     function sendToWhatsApp() {
       const name = document.getElementById("name").value;
       const aadhar = document.getElementById("aadhar").value;
@@ -148,27 +103,10 @@
       const drop = document.getElementById("drop").value;
       const mobile = document.getElementById("mobile").value;
 
-      const message = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Pickup: ${pickup}\n📍 Drop: ${drop}\n📞 Mobile: ${mobile}`;
-      const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
-      window.open(whatsappURL, "_blank");
-    }
+      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📍 Pickup: ${pickup}\n📍 Drop: ${drop}\n📞 Mobile: ${mobile}`;
 
-    function sendOnlyLocation() {
-      if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-            const link = `https://www.google.com/maps?q=${lat},${lon}`;
-            const message = `📍 *My Current Location:*\n${link}`;
-            const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
-            window.open(whatsappURL, "_blank");
-          },
-          function () {
-            alert("⚠️ Unable to fetch your location.");
-          }
-        );
-      }
+      const waUrl = `https://wa.me/919041286835?text=${encodeURIComponent(msg)}`;
+      window.open(waUrl, "_blank");
     }
   </script>
 
