@@ -81,12 +81,6 @@
       width: 100%;
       bottom: 0;
     }
-
-    .readonly-car {
-      background: #f0f0f0;
-      font-weight: bold;
-      color: #444;
-    }
   </style>
 </head>
 <body>
@@ -105,18 +99,47 @@
       <input type="text" id="mobile" placeholder="Mobile Number" required>
       <input type="number" id="adults" placeholder="Number of Adults (Max 4)" min="1" max="4" required>
       <input type="number" id="children" placeholder="Children Below 10 (Max 3)" min="0" max="3">
-
       <input class="readonly-car" type="text" value="Alto K10 VXI" readonly>
 
-      <small>
-        <mark>Punjabi</mark><br>📍 ਗੂਗਲ ਮੈਪਸ ਖੋਲ੍ਹੋ, ਖੋਜੋ ਅਤੇ ਆਪਣਾ ਸਥਾਨ ਚੁਣੋ। "Share" 'ਤੇ ਜਾਓ, "Copy Link", ਅਤੇ ਹੇਠਾਂ ਪੇਸਟ ਕਰੋ👇<br><br>
-        <mark>Hindi</mark><br>📍 Google Maps खोलें, लोकेशन चुनें → शेयर करें → लिंक कॉपी करें → नीचे पेस्ट करें👇<br><br>
-        <mark>English</mark><br>📍 Open Google Maps → Search your location → Share → Copy Link → Paste Below👇
-      </small>
+      <p style="background-color: #f0f8ff; padding: 12px; border-left: 4px solid #007bff; line-height: 1.6;">
+<b>📍 Location Link Guide:</b><br><br>
+
+<b>English:</b><br>
+Open Google Maps, search and select your location.  
+After selecting it, tap the <b>"Share"</b> button, then tap <b>"Copy to clipboard"</b>, and paste the link in the box below. 👇<br><br>
+
+<b>हिंदी:</b><br>
+📍 Google मैप्स खोलें, अपना स्थान खोजें और चुनें।  
+चुनने के बाद <b>"शेयर"</b> बटन पर टैप करें, फिर <b>"क्लिपबोर्ड पर कॉपी करें"</b> पर टैप करें, और लिंक को नीचे दिए गए बॉक्स में पेस्ट करें। 👇<br><br>
+
+<b>ਪੰਜਾਬੀ:</b><br>
+📍 ਗੂਗਲ ਮੈਪ ਖੋਲ੍ਹੋ, ਆਪਣੀ ਸਥਿਤੀ ਲੱਭੋ ਅਤੇ ਚੁਣੋ।  
+ਚੁਣਨ ਤੋਂ ਬਾਅਦ <b>"ਸ਼ੇਅਰ"</b> ਬਟਨ 'ਤੇ ਟੈਪ ਕਰੋ, ਫਿਰ <b>"ਕਲਿੱਪਬੋਰਡ 'ਤੇ ਕਾਪੀ ਕਰੋ"</b> 'ਤੇ ਟੈਪ ਕਰੋ, ਅਤੇ ਲਿੰਕ ਨੂੰ ਹੇਠਾਂ ਦਿੱਤੇ ਬਾਕਸ ਵਿੱਚ ਪੇਸਟ ਕਰੋ। 👇
+</p>
+
 
       <input type="text" id="location" placeholder="Your Google Maps Location Link" required>
 
-      <button type="submit">Send your Details</button>
+      <button type="submit">Submit</button>
+      <p style="background-color:#f9f9f9; padding: 14px; border-left: 4px solid #007bff; font-size: 15px; line-height: 1.7;">
+
+<b>ਪੰਜਾਬੀ (Punjabi):</b><br>
+ਪਹਿਲਾਂ ਆਪਣੀਆਂ ਜਾਣਕਾਰੀਆਂ ਭੇਜੋ, ਉਸ ਤੋਂ ਬਾਅਦ ਅਸੀਂ ਤੁਹਾਨੂੰ ਕੈਬ ਦੇ ਚਾਰਜ ਦੱਸਾਂਗੇ।  
+ਜੇ ਤੁਸੀਂ ਕਿਰਾਏ ਨੂੰ ਠੀਕ ਸਮਝਦੇ ਹੋ, ਤਾਂ ਹੀ ਅਸੀਂ ਬੁਕਿੰਗ ਅੱਗੇ ਵਧਾਵਾਂਗੇ।<br><br>
+
+<b>हिंदी (Hindi):</b><br>
+कृपया पहले अपनी जानकारी भेजें, उसके बाद हम आपको कैब का किराया बताएंगे।  
+अगर आपको रेट सही लगे, तभी हम बुकिंग आगे बढ़ाएंगे।<br><br>
+
+<b>English:</b><br>
+Send the details first, and later we will tell you the cab charges.  
+If you find the rates reasonable, then only we will proceed with the booking.
+
+</p>
+
+
+      
+      
     </form>
   </div>
 
@@ -126,25 +149,24 @@
 
   <script>
     function sendToWhatsApp() {
-      const name = document.getElementById("name").value.trim();
-      const aadhar = document.getElementById("aadhar").value.trim();
-      const mobile = document.getElementById("mobile").value.trim();
+      const name = document.getElementById("name").value;
+      const aadhar = document.getElementById("aadhar").value;
+      const location = document.getElementById("location").value;
+      const mobile = document.getElementById("mobile").value;
       const adults = parseInt(document.getElementById("adults").value);
       const children = parseInt(document.getElementById("children").value) || 0;
-      const location = document.getElementById("location").value.trim();
-      const car = "Alto K10 VXI";
 
       if (adults > 4) {
-        alert("Maximum 4 adults allowed.");
+        alert("Only 4 adults allowed.");
         return;
       }
 
       if (children > 3) {
-        alert("Maximum 3 children under 10 allowed.");
+        alert("Only 3 children under 10 allowed.");
         return;
       }
 
-      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📞 Mobile: ${mobile}\n👥 Adults: ${adults}\n👶 Children: ${children}\n🚗 Car Type: ${car}\n📍 Location: ${location}`;
+      const msg = `🚖 *New Ride Request*\n\n👤 Name: ${name}\n🆔 Aadhar: ${aadhar}\n📞 Mobile: ${mobile}\n👥 Adults: ${adults}\n👶 Children (under 10): ${children}\n📍 Location: ${location}`;
       const waUrl = `https://wa.me/919041286835?text=${encodeURIComponent(msg)}`;
       window.open(waUrl, "_blank");
     }
