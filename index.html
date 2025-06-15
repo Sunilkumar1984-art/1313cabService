@@ -2,116 +2,188 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sahej Cab Booking</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sahej Booking App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    .container {
-      max-width: 450px; background: #fff; margin: 30px auto; padding: 20px;
-      border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
     }
-    h2 { text-align: center; color: #333; }
-    label { margin-top: 12px; display: block; font-weight: bold; }
-    input, datalist {
-      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;
+    .box {
+      max-width: 650px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 25px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .field {
+      flex: 1;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .result {
+      background: #e7ffe7;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 6px;
+      font-weight: bold;
+      color: green;
+      text-align: center;
     }
     button {
-      width: 100%; padding: 12px; margin-top: 20px;
-      background: #25D366; color: white; border: none; border-radius: 10px; font-size: 16px;
+      width: 100%;
+      padding: 12px;
+      background: green;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    button:hover { background: #128C7E; }
-    .success { color: green; text-align: center; margin-top: 10px; }
+    button:hover {
+      background: darkgreen;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>🚖 Sahej Cab Booking</h2>
+  <div class="box">
+    <h2>🚕 Sahej Auto Booking</h2>
 
-  <label>Name:</label>
-  <input type="text" id="name" placeholder="Customer Name">
+    <div class="row">
+      <div class="field">
+        <label>📍 From (Pickup)</label>
+        <select id="start" onchange="calculateFare()">
+          <option value="">-- Select --</option>
+          <option>Sector 17</option>
+          <option>Sector 22</option>
+          <option>Railway Station</option>
+          <option>Airport</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>📍 To (Drop)</label>
+        <select id="end" onchange="calculateFare()">
+          <option value="">-- Select --</option>
+          <option>Sector 17</option>
+          <option>Sector 22</option>
+          <option>Railway Station</option>
+          <option>Airport</option>
+        </select>
+      </div>
+    </div>
 
-  <label>Mobile Number:</label>
-  <input type="tel" id="mobile" placeholder="Customer Phone">
+    <div class="row">
+      <div class="field">
+        <label>💸 Per KM Rate (₹)</label>
+        <input type="number" id="rate" value="15" oninput="calculateFare()">
+      </div>
+      <div class="field">
+        <label>📏 Distance (KM)</label>
+        <input type="number" id="km" readonly>
+      </div>
+    </div>
 
-  <label>Pickup Location:</label>
-  <input list="places" id="pickup" placeholder="e.g. Sector 22">
-  <datalist id="places">
-    <option>Sector 17</option>
-    <option>Sector 22</option>
-    <option>Sector 34</option>
-    <option>Chandigarh Airport</option>
-    <option>ISBT 43</option>
-    <option>Railway Station</option>
-    <option>Elante Mall</option>
-  </datalist>
+    <div class="field">
+      <label>👤 Customer Name</label>
+      <input type="text" id="custName" placeholder="Enter your name">
+    </div>
+    <div class="field">
+      <label>📞 Mobile No.</label>
+      <input type="text" id="custPhone" placeholder="Enter mobile number">
+    </div>
+    <div class="field">
+      <label>🕒 Pickup Time</label>
+      <input type="time" id="pickupTime">
+    </div>
 
-  <label>Drop Location:</label>
-  <input list="places" id="drop" placeholder="e.g. Airport">
+    <div class="result" id="fareBox">Fare will appear here...</div>
 
-  <label>Date:</label>
-  <input type="date" id="date">
+    <button onclick="sendBooking()">📤 Book Now via WhatsApp</button>
+  </div>
 
-  <label>Time:</label>
-  <input type="time" id="time">
+  <script>
+    const distances = {
+      "Sector 17->Sector 22": 3,
+      "Sector 17->Railway Station": 8,
+      "Sector 17->Airport": 10,
+      "Sector 22->Railway Station": 6,
+      "Sector 22->Airport": 9,
+      "Railway Station->Airport": 5
+    };
 
-  <button onclick="bookCab()">Book Now</button>
-  <div class="success" id="successMsg"></div>
-</div>
+    function calculateFare() {
+      const start = document.getElementById("start").value;
+      const end = document.getElementById("end").value;
+      const rate = parseFloat(document.getElementById("rate").value);
+      const kmInput = document.getElementById("km");
+      const fareBox = document.getElementById("fareBox");
 
-<script>
-  function bookCab() {
-    const name = document.getElementById('name').value.trim();
-    const mobile = document.getElementById('mobile').value.trim();
-    const pickup = document.getElementById('pickup').value.trim();
-    const drop = document.getElementById('drop').value.trim();
-    const date = document.getElementById('date').value;
-    const time = document.getElementById('time').value;
+      if (!start || !end || start === end) {
+        fareBox.innerHTML = "⚠️ Select different pickup and drop";
+        kmInput.value = '';
+        return;
+      }
 
-    if (!name || !mobile || !pickup || !drop || !date || !time) {
-      alert("Please fill all fields.");
-      return;
+      const key1 = `${start}->${end}`;
+      const key2 = `${end}->${start}`;
+      const km = distances[key1] || distances[key2];
+
+      if (!km) {
+        fareBox.innerHTML = "❌ Distance not set";
+        kmInput.value = '';
+        return;
+      }
+
+      const totalFare = km * rate;
+      kmInput.value = km;
+      fareBox.innerHTML = `📏 ${km} km × ₹${rate} = <b>₹${totalFare.toFixed(2)}</b>`;
     }
 
-    const message = `🚖 *New Cab Booking*\n\n👤 Name: ${name}\n📱 Mobile: ${mobile}\n📍 Pickup: ${pickup}\n🏁 Drop: ${drop}\n📅 Date: ${date}\n⏰ Time: ${time}`;
+    function sendBooking() {
+      const start = document.getElementById("start").value;
+      const end = document.getElementById("end").value;
+      const rate = document.getElementById("rate").value;
+      const km = document.getElementById("km").value;
+      const fare = km * rate;
+      const name = document.getElementById("custName").value;
+      const phone = document.getElementById("custPhone").value;
+      const time = document.getElementById("pickupTime").value;
 
-    // Save data in LocalStorage
-    const booking = { name, mobile, pickup, drop, date, time, bookedAt: new Date().toLocaleString() };
-    const allBookings = JSON.parse(localStorage.getItem("cabBookings") || "[]");
-    allBookings.push(booking);
-    localStorage.setItem("cabBookings", JSON.stringify(allBookings));
+      if (!start || !end || !name || !phone || !time || !km) {
+        alert("⚠️ Please fill all fields");
+        return;
+      }
 
-    // Send to WhatsApp
-    const whatsappNumber = "919041286835";
-    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, "_blank");
+      const message = 
+        `New Booking:\n` +
+        `👤 Name: ${name}\n📞 Phone: ${phone}\n🕒 Time: ${time}\n` +
+        `📍 From: ${start}\n📍 To: ${end}\n📏 Distance: ${km} km\n💸 Fare: ₹${fare.toFixed(2)}`;
 
-    // Send via EmailJS (optional setup)
-    // emailjs.send(...) – can be added if you register with EmailJS
-
-    // Show success
-    document.getElementById('successMsg').innerText = "Booking Sent!";
-
-    // Also offer bill download
-    generateBill(booking);
-  }
-
-  function generateBill(data) {
-    const win = window.open("", "_blank");
-    win.document.write(`
-      <html><head><title>Booking Receipt</title></head><body>
-      <h2>Sahej Cab Booking Receipt</h2>
-      <p><strong>Name:</strong> ${data.name}</p>
-      <p><strong>Mobile:</strong> ${data.mobile}</p>
-      <p><strong>Pickup:</strong> ${data.pickup}</p>
-      <p><strong>Drop:</strong> ${data.drop}</p>
-      <p><strong>Date:</strong> ${data.date}</p>
-      <p><strong>Time:</strong> ${data.time}</p>
-      <p><strong>Booked At:</strong> ${data.bookedAt}</p>
-      <br><button onclick="window.print()">🧾 Print / Save PDF</button>
-      </body></html>
-    `);
-    win.document.close();
-  }
-</script>
+      const encoded = encodeURIComponent(message);
+      const whatsappLink = `https://wa.me/919041286835?text=${encoded}`;
+      window.open(whatsappLink, '_blank');
+    }
+  </script>
 </body>
 </html>
