@@ -5,113 +5,58 @@
   <title>Sahej Booking App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
-    .box {
-      max-width: 650px;
-      margin: auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 25px;
-    }
-    .row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-    .field {
-      flex: 1;
-    }
-    label {
-      font-weight: bold;
-    }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-    .result {
-      background: #e7ffe7;
-      padding: 15px;
-      margin-top: 15px;
-      border-radius: 6px;
-      font-weight: bold;
-      color: green;
-      text-align: center;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background: green;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: darkgreen;
-    }
+    body { font-family: sans-serif; background: #f0f8ff; padding: 20px; }
+    .box { max-width: 650px; margin: auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #333; margin-bottom: 20px; }
+    .row { display: flex; gap: 10px; margin-bottom: 15px; }
+    .field { flex: 1; }
+    label { font-weight: bold; }
+    input, select { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+    .result { display: block; background: #e7ffe7; padding: 15px; border-radius: 5px; margin: 15px 0; font-weight: bold; color: green; text-align: center; }
+    button { width: 100%; padding: 12px; background: #28a745; color: white; font-size: 16px; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>🚕 Sahej Auto Booking</h2>
+    <h2>🚖 Sahej Ride Booking</h2>
 
     <div class="row">
       <div class="field">
-        <label>📍 From (Pickup)</label>
+        <label>📍 From</label>
         <select id="start" onchange="calculateFare()">
-          <option value="">-- Select --</option>
+          <option value="">Select</option>
           <option>Sector 17</option>
           <option>Sector 22</option>
-          <option>Railway Station</option>
-          <option>Airport</option>
+          <option>Mohali Phase 5</option>
+          <option>Fatehgarh Sahib</option>
+          <option>Patiala Bus Stand</option>
         </select>
       </div>
       <div class="field">
-        <label>📍 To (Drop)</label>
+        <label>📍 To</label>
         <select id="end" onchange="calculateFare()">
-          <option value="">-- Select --</option>
+          <option value="">Select</option>
           <option>Sector 17</option>
           <option>Sector 22</option>
-          <option>Railway Station</option>
-          <option>Airport</option>
+          <option>Mohali Phase 5</option>
+          <option>Fatehgarh Sahib</option>
+          <option>Patiala Bus Stand</option>
         </select>
       </div>
     </div>
 
     <div class="row">
       <div class="field">
-        <label>💸 Per KM Rate (₹)</label>
-        <input type="number" id="rate" value="15" oninput="calculateFare()">
+        <label>👤 Customer Name</label>
+        <input type="text" id="custName">
       </div>
       <div class="field">
-        <label>📏 Distance (KM)</label>
-        <input type="number" id="km" readonly>
+        <label>📞 Mobile No.</label>
+        <input type="text" id="custPhone">
       </div>
     </div>
 
-    <div class="field">
-      <label>👤 Customer Name</label>
-      <input type="text" id="custName" placeholder="Enter your name">
-    </div>
-    <div class="field">
-      <label>📞 Mobile No.</label>
-      <input type="text" id="custPhone" placeholder="Enter mobile number">
-    </div>
     <div class="field">
       <label>🕒 Pickup Time</label>
       <input type="time" id="pickupTime">
@@ -123,65 +68,64 @@
   </div>
 
   <script>
+    let rate = 15; // hidden backend rate
     const distances = {
-      "Sector 17->Sector 22": 3,
-      "Sector 17->Railway Station": 8,
-      "Sector 17->Airport": 10,
-      "Sector 22->Railway Station": 6,
-      "Sector 22->Airport": 9,
-      "Railway Station->Airport": 5
+      "Sector 17->Sector 22": 4,
+      "Sector 17->Mohali Phase 5": 9,
+      "Sector 22->Fatehgarh Sahib": 35,
+      "Mohali Phase 5->Patiala Bus Stand": 40,
+      "Fatehgarh Sahib->Patiala Bus Stand": 30,
+      "Sector 22->Sector 17": 4,
+      "Mohali Phase 5->Sector 17": 9,
+      "Fatehgarh Sahib->Sector 22": 35,
+      "Patiala Bus Stand->Mohali Phase 5": 40,
+      "Patiala Bus Stand->Fatehgarh Sahib": 30
     };
 
     function calculateFare() {
       const start = document.getElementById("start").value;
       const end = document.getElementById("end").value;
-      const rate = parseFloat(document.getElementById("rate").value);
-      const kmInput = document.getElementById("km");
       const fareBox = document.getElementById("fareBox");
 
       if (!start || !end || start === end) {
-        fareBox.innerHTML = "⚠️ Select different pickup and drop";
-        kmInput.value = '';
+        fareBox.innerHTML = "⚠️ Please select valid locations.";
         return;
       }
 
-      const key1 = `${start}->${end}`;
-      const key2 = `${end}->${start}`;
-      const km = distances[key1] || distances[key2];
+      const key = `${start}->${end}`;
+      const reverseKey = `${end}->${start}`;
+      const km = distances[key] || distances[reverseKey];
 
       if (!km) {
-        fareBox.innerHTML = "❌ Distance not set";
-        kmInput.value = '';
+        fareBox.innerHTML = "❌ Distance not available.";
         return;
       }
 
-      const totalFare = km * rate;
-      kmInput.value = km;
-      fareBox.innerHTML = `📏 ${km} km × ₹${rate} = <b>₹${totalFare.toFixed(2)}</b>`;
+      const fare = km * rate;
+      fareBox.innerHTML = `🚗 Distance: ${km} km | 💰 Fare: ₹${fare.toFixed(2)}`;
     }
 
     function sendBooking() {
-      const start = document.getElementById("start").value;
-      const end = document.getElementById("end").value;
-      const rate = document.getElementById("rate").value;
-      const km = document.getElementById("km").value;
-      const fare = km * rate;
       const name = document.getElementById("custName").value;
       const phone = document.getElementById("custPhone").value;
       const time = document.getElementById("pickupTime").value;
+      const start = document.getElementById("start").value;
+      const end = document.getElementById("end").value;
 
-      if (!start || !end || !name || !phone || !time || !km) {
-        alert("⚠️ Please fill all fields");
+      const key = `${start}->${end}`;
+      const reverseKey = `${end}->${start}`;
+      const km = distances[key] || distances[reverseKey];
+      const fare = km * rate;
+
+      if (!name || !phone || !time || !start || !end || !km) {
+        alert("⚠️ Please fill all fields.");
         return;
       }
 
-      const message = 
-        `New Booking:\n` +
-        `👤 Name: ${name}\n📞 Phone: ${phone}\n🕒 Time: ${time}\n` +
-        `📍 From: ${start}\n📍 To: ${end}\n📏 Distance: ${km} km\n💸 Fare: ₹${fare.toFixed(2)}`;
+      const msg = `📟 *New Booking Request*\n\n👤 Name: ${name}\n📞 Phone: ${phone}\n🕒 Time: ${time}\n📍 From: ${start}\n📍 To: ${end}\n🛍️ Distance: ${km} km\n💰 Fare: ₹${fare.toFixed(2)}`;
 
-      const encoded = encodeURIComponent(message);
-      const whatsappLink = `https://wa.me/919041286835?text=${encoded}`;
+      const encodedMsg = encodeURIComponent(msg);
+      const whatsappLink = `https://wa.me/919041286835?text=${encodedMsg}`;
       window.open(whatsappLink, '_blank');
     }
   </script>
