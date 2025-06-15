@@ -5,29 +5,55 @@
   <title>1313Cab Service - Book a Ride</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      max-width: 500px;
-      margin: 40px auto;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #1313cc;
+      color: white;
       padding: 20px;
-      border: 2px solid #ccc;
-      border-radius: 10px;
-      background-color: #f9f9f9;
       text-align: center;
     }
-    img {
-      max-width: 120px;
-      margin-bottom: 15px;
+
+    header img {
+      height: 60px;
+      vertical-align: middle;
+      margin-right: 15px;
     }
-    h2 {
-      color: #333;
+
+    header h1 {
+      display: inline-block;
+      font-size: 26px;
+      margin: 0;
+      vertical-align: middle;
     }
-    input, textarea {
+
+    .container {
+      max-width: 500px;
+      background: white;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #1313cc;
+    }
+
+    input {
       width: 100%;
       padding: 10px;
-      margin: 8px 0;
+      margin: 10px 0;
       border: 1px solid #aaa;
       border-radius: 5px;
+      font-size: 16px;
     }
+
     button {
       background-color: #25D366;
       color: white;
@@ -36,27 +62,64 @@
       width: 100%;
       border-radius: 5px;
       font-size: 16px;
+      cursor: pointer;
       margin-top: 10px;
     }
+
     button:hover {
       background-color: #1ebe5d;
+    }
+
+    .location-btn {
+      background-color: #007bff;
+    }
+
+    .location-btn:hover {
+      background-color: #0056b3;
+    }
+
+    footer {
+      background-color: #1313cc;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <img src="https://i.imgur.com/Vf4f6sG.png" alt="1313Cab Logo"> <!-- Replace with your own logo URL -->
-  <h2>1313Cab Service - Ride Booking</h2>
+  <!-- Header with Baba Nanak ji -->
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Guru_Nanak_with_Halo.png/200px-Guru_Nanak_with_Halo.png" alt="Baba Nanak ji">
+    <h1>1313Cab Service</h1>
+  </header>
 
-  <form onsubmit="sendToWhatsApp(); return false;">
-    <input type="text" id="name" placeholder="Customer Name" required>
-    <input type="text" id="aadhar" placeholder="Aadhar Number" required>
-    <input type="text" id="pickup" placeholder="Pickup Location" required>
-    <input type="text" id="drop" placeholder="Drop Location" required>
-    <input type="text" id="mobile" placeholder="Customer Mobile Number" required>
-    <button type="submit">Send on WhatsApp</button>
-  </form>
+  <!-- Booking Form -->
+  <div class="container">
+    <h2>Book Your Ride</h2>
+    <form onsubmit="sendToWhatsApp(); return false;">
+      <input type="text" id="name" placeholder="Customer Name" required>
+      <input type="text" id="aadhar" placeholder="Aadhar Number" required>
+      <input type="text" id="pickup" placeholder="Pickup Location" required>
+      <input type="text" id="drop" placeholder="Drop Location" required>
+      <input type="text" id="mobile" placeholder="Customer Mobile Number" required>
+      <button type="submit">Send on WhatsApp</button>
+    </form>
 
+    <h3 style="text-align:center; margin-top:30px;">OR 📍</h3>
+    <button class="location-btn" onclick="sendCurrentLocation()">📍 Send My Current Location</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    © 2025 | 1313Cab Service | Powered by Sunil Kumar
+  </footer>
+
+  <!-- JavaScript for WhatsApp send -->
   <script>
     function sendToWhatsApp() {
       const name = document.getElementById("name").value;
@@ -72,11 +135,29 @@
 📍 Drop: ${drop}
 📞 Customer Mobile: ${mobile}`;
 
-      const phoneNumber = "919041286835"; // YOUR number with country code
+      const phoneNumber = "919041286835"; // Your WhatsApp number
       const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
       window.open(whatsappURL, "_blank");
+    }
+
+    function sendCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+          const message = `📍 *My Current Location for Pickup:*\n${mapLink}`;
+          const whatsappURL = `https://wa.me/919041286835?text=${encodeURIComponent(message)}`;
+          window.open(whatsappURL, "_blank");
+        }, function(error) {
+          alert("Location access denied or not available.");
+        });
+      } else {
+        alert("Geolocation is not supported by this browser.");
+      }
     }
   </script>
 
 </body>
 </html>
+
