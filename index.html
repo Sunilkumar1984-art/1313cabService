@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sahej Cab Booking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container {
+      max-width: 450px; background: #fff; margin: 30px auto; padding: 20px;
+      border-radius: 15px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 { text-align: center; color: #333; }
+    label { margin-top: 12px; display: block; font-weight: bold; }
+    input, datalist {
+      width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px;
+    }
+    button {
+      width: 100%; padding: 12px; margin-top: 20px;
+      background: #25D366; color: white; border: none; border-radius: 10px; font-size: 16px;
+    }
+    button:hover { background: #128C7E; }
+    .success { color: green; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>🚖 Sahej Cab Booking</h2>
+
+  <label>Name:</label>
+  <input type="text" id="name" placeholder="Customer Name">
+
+  <label>Mobile Number:</label>
+  <input type="tel" id="mobile" placeholder="Customer Phone">
+
+  <label>Pickup Location:</label>
+  <input list="places" id="pickup" placeholder="e.g. Sector 22">
+  <datalist id="places">
+    <option>Sector 17</option>
+    <option>Sector 22</option>
+    <option>Sector 34</option>
+    <option>Chandigarh Airport</option>
+    <option>ISBT 43</option>
+    <option>Railway Station</option>
+    <option>Elante Mall</option>
+  </datalist>
+
+  <label>Drop Location:</label>
+  <input list="places" id="drop" placeholder="e.g. Airport">
+
+  <label>Date:</label>
+  <input type="date" id="date">
+
+  <label>Time:</label>
+  <input type="time" id="time">
+
+  <button onclick="bookCab()">Book Now</button>
+  <div class="success" id="successMsg"></div>
+</div>
+
+<script>
+  function bookCab() {
+    const name = document.getElementById('name').value.trim();
+    const mobile = document.getElementById('mobile').value.trim();
+    const pickup = document.getElementById('pickup').value.trim();
+    const drop = document.getElementById('drop').value.trim();
+    const date = document.getElementById('date').value;
+    const time = document.getElementById('time').value;
+
+    if (!name || !mobile || !pickup || !drop || !date || !time) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    const message = `🚖 *New Cab Booking*\n\n👤 Name: ${name}\n📱 Mobile: ${mobile}\n📍 Pickup: ${pickup}\n🏁 Drop: ${drop}\n📅 Date: ${date}\n⏰ Time: ${time}`;
+
+    // Save data in LocalStorage
+    const booking = { name, mobile, pickup, drop, date, time, bookedAt: new Date().toLocaleString() };
+    const allBookings = JSON.parse(localStorage.getItem("cabBookings") || "[]");
+    allBookings.push(booking);
+    localStorage.setItem("cabBookings", JSON.stringify(allBookings));
+
+    // Send to WhatsApp
+    const whatsappNumber = "919041286835";
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, "_blank");
+
+    // Send via EmailJS (optional setup)
+    // emailjs.send(...) – can be added if you register with EmailJS
+
+    // Show success
+    document.getElementById('successMsg').innerText = "Booking Sent!";
+
+    // Also offer bill download
+    generateBill(booking);
+  }
+
+  function generateBill(data) {
+    const win = window.open("", "_blank");
+    win.document.write(`
+      <html><head><title>Booking Receipt</title></head><body>
+      <h2>Sahej Cab Booking Receipt</h2>
+      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Mobile:</strong> ${data.mobile}</p>
+      <p><strong>Pickup:</strong> ${data.pickup}</p>
+      <p><strong>Drop:</strong> ${data.drop}</p>
+      <p><strong>Date:</strong> ${data.date}</p>
+      <p><strong>Time:</strong> ${data.time}</p>
+      <p><strong>Booked At:</strong> ${data.bookedAt}</p>
+      <br><button onclick="window.print()">🧾 Print / Save PDF</button>
+      </body></html>
+    `);
+    win.document.close();
+  }
+</script>
+</body>
+</html>
