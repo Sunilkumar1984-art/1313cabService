@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>1313Cab Service | Book Alto K10 VXI Taxi</title>
+  <title>1313Cab Service | Book Alto K10 VXI Taxi in Punjab</title>
+  <meta name="description" content="Book Alto K10 VXI taxi with 1313Cab Service. Easy WhatsApp booking for local and outstation rides in Punjab.">
+  <meta name="keywords" content="1313Cab, Alto K10 Taxi, Book Cab Punjab, Mohali Taxi, Sunil Kumar Cab Service, WhatsApp Booking">
+  <meta name="author" content="Sunil Kumar">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Book Alto K10 VXI cab with 1313Cab Service. Easy booking via WhatsApp.">
+
+  <!-- Open Graph for Facebook sharing -->
+  <meta property="og:title" content="1313Cab Service - Book Alto K10 VXI Cab">
+  <meta property="og:description" content="Local & Outstation cab booking via WhatsApp. Alto K10 VXI.">
+  <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Guru_Nanak_with_Halo.png/200px-Guru_Nanak_with_Halo.png">
+  <meta property="og:url" content="https://sunilkumar1984-art.github.io/1313cab">
+
+  <!-- Favicon -->
+  <link rel="icon" href="download.jpg" type="image/png">
 
   <style>
     body {
@@ -13,19 +24,25 @@
       margin: 0;
       padding: 0;
     }
+
     header {
       background: #1313cc;
       color: white;
       text-align: center;
       padding: 20px;
     }
+
     header img {
       height: 80px;
+      vertical-align: middle;
       border-radius: 50%;
     }
+
     header h1 {
+      font-size: 28px;
       margin: 10px 0 0;
     }
+
     .container {
       max-width: 520px;
       background: white;
@@ -34,31 +51,32 @@
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-    input, button {
+
+    input {
       width: 100%;
       padding: 10px;
       margin-top: 12px;
-      font-size: 15px;
-      border-radius: 5px;
-    }
-    input {
       border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
     }
+
     button {
       background-color: #25D366;
       color: white;
+      padding: 12px;
+      margin-top: 20px;
+      font-size: 16px;
+      width: 100%;
       border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background-color: #1ebe5d;
     }
-    .note {
-      background-color: #f0f8ff;
-      padding: 12px;
-      border-left: 4px solid #007bff;
-      margin-top: 15px;
-    }
+
     footer {
       background: #1313cc;
       color: white;
@@ -66,16 +84,35 @@
       padding: 15px;
       margin-top: 40px;
     }
+
     .qr {
       text-align: center;
       margin-top: 30px;
+    }
+
+    .map-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .map-link a {
+      background: #007bff;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .map-link a:hover {
+      background: #0056b3;
     }
   </style>
 </head>
 <body>
 
   <header>
-    <img src="download.jpg" alt="Logo">
+    <img src="download.jpg" alt="Baba Nanak ji">
     <h1>1313Cab Service</h1>
   </header>
 
@@ -87,24 +124,25 @@
       <input type="text" id="aadhar" placeholder="Aadhar Number" required>
       <input type="text" id="mobile" placeholder="Mobile Number" required>
       <input type="number" id="adults" placeholder="Number of Adults (Max 4)" min="1" max="4" required>
-      <input type="number" id="children" placeholder="Children Below 10 (Max 3)" min="0" max="3">
+      <input type="number" id="children" placeholder="Children Below 10 (Max 1)" min="0" max="1">
       <input type="text" value="Alto K10 VXI" readonly>
 
-      <div class="note">
-        <b>📍 Location Steps:</b><br>
-        1. Tap below to open Google Maps<br>
-        2. Select location → Share → Copy link → Paste it below
+      <p style="background-color:#f0f8ff; padding:12px; border-left:4px solid #007bff;">
+        📍 <b>Google Map Link:</b><br>
+        Open Google Maps → Search location → Tap "Share" → "Copy link" → Paste below:
+      </p>
+
+      <div class="map-link">
+        👉 <a href="https://maps.google.com" target="_blank">Open Google Maps</a>
       </div>
 
-      <button type="button" onclick="window.open('https://www.google.com/maps', '_blank')">🌍 Open Google Maps</button>
-      <input type="text" id="location" placeholder="Paste Google Maps Link Here" required>
-      <button type="button" onclick="fillLocation()">📌 Auto-Fill My Location</button>
+      <input type="text" id="location" placeholder="Your Google Maps Location Link" required>
 
-      <button type="submit">📲 Submit Booking on WhatsApp</button>
+      <button type="submit">Submit Booking on WhatsApp</button>
     </form>
 
     <div class="qr">
-      <p><b>Scan QR to open this page:</b></p>
+      <p><b>Scan QR to open this booking page:</b></p>
       <img id="qrcode" src="" width="180" height="180" alt="QR Code">
     </div>
   </div>
@@ -117,17 +155,18 @@
     function sendToWhatsApp() {
       const name = document.getElementById("name").value;
       const aadhar = document.getElementById("aadhar").value;
+      const location = document.getElementById("location").value;
       const mobile = document.getElementById("mobile").value;
       const adults = parseInt(document.getElementById("adults").value);
       const children = parseInt(document.getElementById("children").value) || 0;
-      const location = document.getElementById("location").value;
 
       if (adults > 4) {
         alert("Only 4 adults allowed.");
         return;
       }
-      if (children > 3) {
-        alert("Only 3 children under 10 allowed.");
+
+      if (children > 1) {
+        alert("Only 1 child under 10 allowed.");
         return;
       }
 
@@ -136,21 +175,7 @@
       window.open(waUrl, "_blank");
     }
 
-    function fillLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          const gmapLink = `https://www.google.com/maps?q=${lat},${lng}`;
-          document.getElementById("location").value = gmapLink;
-        }, function(error) {
-          alert("Location access denied or not available.");
-        });
-      } else {
-        alert("Geolocation not supported.");
-      }
-    }
-
+    // Generate QR Code for this page
     const currentURL = window.location.href;
     document.getElementById("qrcode").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(currentURL)}`;
   </script>
